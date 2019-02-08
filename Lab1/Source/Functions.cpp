@@ -101,15 +101,15 @@ void PrintMap(Map<std::uint16_t> &map, Map<bool> &takenSpaces)
     {
         for (std::uint16_t xPos = 0; xPos < map[0].size(); xPos++)
         {
-            //if (takenSpaces[yPos][xPos] == true)
-            // {
-            std::cout << " " << map[yPos][xPos] << " ";
-            // }
+            if (takenSpaces[yPos][xPos] == true)
+            {
+                std::cout << " " << map[yPos][xPos] << " ";
+            }
 
-            // else
-            // {
-            //     std::cout << " * ";
-            // }
+            else
+            {
+                std::cout << " * ";
+            }
         }
 
         std::cout << std::endl;
