@@ -1,17 +1,20 @@
 //Fil for implementation of the main-function
 #include <iostream>
 #include <string>
+#include <time.h>
 #include "Functions.hpp"
 
 int main()
-{
+{	
+	const std::uint16_t maxValue = std::numeric_limits<std::uint16_t>::max();
+	srand(static_cast<unsigned>(time(NULL)));
+
     Map<std::uint16_t> map;
     Map<bool> booleanMap;
-	int TreasureFound = 0;
-	int moveCounter = 0;
     Coordinate input;
-	std::uint16_t height = 10;
-	std::uint16_t width = 10;
+
+	std::uint16_t height = 10, width = 10;
+	int TreasureFound = 0, moveCounter = 0;
 
     CreateMap(map, booleanMap, width, height);
 
@@ -24,7 +27,7 @@ int main()
 		{
 			if (map[input.y][input.x] == 0)
 			{
-				map[input.y][input.x] = map.size();
+				map[input.y][input.x] = maxValue;
 				UpdateMap(map);
 				std::cout << "You found a treasure!" << std::endl;
 				TreasureFound++;
@@ -36,10 +39,8 @@ int main()
 		}
 
 		else
-		{
-			std::cin.clear();
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			std::cout << "\nInvalid input";	
+		{			
+			std::cout << "\nInvalid input";
 			getchar();
 		}
     }
