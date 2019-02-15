@@ -1,9 +1,9 @@
 #include "Tetrimino.hpp"
 #include <cmath>
 #include <iostream>
-int16_t Tetrimino::SignOF(Block::Coordinates N)
+int16_t SignOF(int16_t N)
 {
-	if (N.xCoord < 0 && N.yCoord < 0)
+	if (N < 0)
 	{
 		return -1;
 	}
@@ -13,33 +13,28 @@ int16_t Tetrimino::SignOF(Block::Coordinates N)
 	}
 }
 
-Block::Coordinates Tetrimino::RotateCoordinates(Block::Coordinates coordinates, float cosinusRotation, float sinusRotation)
+Block::Coordinates RotateCoordinates(Block::Coordinates coordinates, float cosinusRotation, float sinusRotation)
 {
 	Block::Coordinates rotatedCords;
 	rotatedCords.xCoord = coordinates.xCoord*cosinusRotation - coordinates.yCoord*sinusRotation;
-	rotatedCords.yCoord = coordinates.yCoord*sinusRotation + coordinates.xCoord*cosinusRotation;
+	rotatedCords.yCoord = coordinates.xCoord*sinusRotation + coordinates.yCoord*cosinusRotation;
 	return rotatedCords;
 }
 
-Block::Coordinates Tetrimino::NewCenterCoordinates(Block::Coordinates coordinates, Block::Coordinates figureCenterCoordinates)
+Block::Coordinates NewCenterCoordinates(Block::Coordinates coordinates, Block::Coordinates figureCenterCoordinates)
 {
-	coordinates.xCoord = coordinates.xCoord + figureCenterCoordinates.xCoord;
-	coordinates.yCoord = coordinates.yCoord + figureCenterCoordinates.yCoord;
-	return coordinates;
+	Block::Coordinates newc;
+	newc.xCoord = coordinates.xCoord + figureCenterCoordinates.xCoord;
+	newc.yCoord = coordinates.yCoord + figureCenterCoordinates.yCoord;
+	return newc;
 }
 
-int16_t Tetrimino::SnapToGrid(Block::Coordinates coordinate, uint8_t blockSideLength)
+int16_t SnapToGrid(int16_t coordinate, uint16_t blockSideLength)
 {
-	Block::Coordinates centerCoords;
-	Block::Coordinates topLeft;
-	centerCoords.xCoord = std::abs(coordinate.xCoord) + blockSideLength / 2;
-	centerCoords.yCoord = std::abs(coordinate.yCoord) + blockSideLength / 2;
-	topLeft.xCoord = (centerCoords.xCoord / BLOCKSIZE)*blockSideLength;
-	topLeft.yCoord = (centerCoords.yCoord / BLOCKSIZE)*blockSideLength;
-	return ;
+	int16_t centerCoord = std::abs(coordinate) + blockSideLength / 2;
+	int16_t topLeft = (centerCoord / blockSideLength)*blockSideLength;
+	return SignOF(coordinate)*topLeft;
 }
-
-
 
 Tetrimino::Tetrimino()
 {
@@ -48,61 +43,126 @@ Tetrimino::Tetrimino()
 Tetrimino::Tetrimino(std::vector<Block::Coordinates> blockPositions, Block::Coordinates blockCenter, Colour blockColour)
 {
 	this->centerPoint = blockCenter;
-	for (size_t i = 0; i < blocks.size(); i++)
+	for (size_t i = 0; i < blockPositions.size(); i++)
 	{
-		this->blocks.push_back(Block());
-		Block(blockPositions, uint16_t(10), Block::RGBValues({ 255, 255, 255 }), uint16_t(0));
+		Block block = Block(blockPositions[i], BLOCKSIZE, Block::RGBValues({ blockColour.r, blockColour.g, blockColour.b }), 0);
+		this->blocks.push_back(block);
 	}
 }
 
 void Tetrimino::Rotate(float radians)
-{
-	Block::Coordinates topLeft;
+{	
 	Block::Coordinates shiftedCoords;
+	Block::Coordinates topLeft;
+	Block::Coordinates newCoords;
+	Block::Coordinates figcenter = this->centerPoint;
 	float sinRotate = std::sin(radians);
 	float cosRotate = std::cos(radians);
-	Block::Coordinates figcenterCoords = centerPoint;
 
-	for (auto &Block : blocks)
+	for (size_t i = 0; i < blocks.size(); i++)
 	{
-		shiftedCoords.xCoord = Block.GetCoordinates().xCoord + Block.GetSize() / 2 - figcenterCoords.xCoord;
-		shiftedCoords.yCoord = Block.GetCoordinates().yCoord + Block.GetSize() / 2 - figcenterCoords.yCoord;
+		shiftedCoords.xCoord = blocks[i].GetCoordinates().xCoord + blocks[i].GetSize() / 2 - figcenter.xCoord;
+		shiftedCoords.yCoord = blocks[i].GetCoordinates().yCoord + blocks[i].GetSize() / 2 - figcenter.yCoord;
+		
 		Block::Coordinates rotated = RotateCoordinates(shiftedCoords, cosRotate, sinRotate);
-		Block::Coordinates newCenter = NewCenterCoordinates(rotated, figcenterCoords);
-		topLeft.xCoord = newCenter.xCoord - Block.GetSize() / 2;
-		topLeft.yCoord = newCenter.yCoord - Block.GetSize() / 2;
+		
+		Block::Coordinates newCenter = NewCenterCoordinates(rotated, figcenter);
+		
+		topLeft.xCoord = newCenter.xCoord - blocks[i].GetSize() / 2;
+		topLeft.yCoord = newCenter.yCoord - blocks[i].GetSize() / 2;
 
-		Block.SetCoordinates(SnapToGrid(topLeft.xCoord, Block.GetSize()));
-		Block.SetCoordinates(SnapToGrid(topLeft.yCoord, Block.GetSize()));
+		newCoords.xCoord = SnapToGrid(topLeft.xCoord, blocks[i].GetSize());
+		newCoords.yCoord = SnapToGrid(topLeft.yCoord, blocks[i].GetSize());
+		blocks[i].SetCoordinates(newCoords);
 	}
-	std::cout << "n";
 }
 
 void Tetrimino::Move(Direction dir)
 {
+	switch (dir)
+	{//center fix
+	case Direction::DOWN:
+		for (size_t i = 0; i < blocks.size(); i++)
+		{
+			blocks[i].Move(0, blocks[i].GetSize());
+		}
+		break;
+	case Direction::LEFT:
+		for (size_t i = 0; i < blocks.size(); i++)
+		{
+			blocks[i].Move(-blocks[i].GetSize(), 0);
+		}
+		break;
+	case Direction::RIGHT:
+		for (size_t i = 0; i < blocks.size(); i++)
+		{
+			blocks[i].Move(blocks[i].GetSize(), 0);
+		}
+		break;
+	case Direction::UP:
+		for (size_t i = 0; i < blocks.size(); i++)
+		{
+			blocks[i].Move(0, -blocks[i].GetSize());
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 bool Tetrimino::CheckCollision(const Block & otherBlocks) const
 {
-	return false;
+	bool checkcol = false;
+	for (size_t i = 0; i < blocks.size(); i++)
+	{
+		if (otherBlocks.GetCoordinates().xCoord  == blocks[i].GetCoordinates().xCoord && otherBlocks.GetCoordinates().yCoord == blocks[i].GetCoordinates().yCoord)
+		{
+			checkcol = true;
+		}
+	}
+	return checkcol;
 }
 
 std::vector<Block> Tetrimino::GetBlocks() const
 {
-	return std::vector<Block>();
+	return this->blocks;
 }
 
 int16_t Tetrimino::GetLeftEdge()
 {
-	return Block().GetCoordinates().xCoord;
+	int left = this->centerPoint.xCoord;
+	for (size_t i = 0; i < this->blocks.size(); i++)
+	{
+		if (left > blocks[i].GetCoordinates().xCoord)
+		{
+			left = blocks[i].GetCoordinates().xCoord;
+		}
+	}
+	return left;
 }
 
 int16_t Tetrimino::GetRightEdge()
 {
-	return Block().GetCoordinates().xCoord + Block().GetSize();
+	int right = this->centerPoint.xCoord;
+	for (size_t i = 0; i < this->blocks.size(); i++)
+	{
+		if (right < blocks[i].GetCoordinates().xCoord + blocks[i].GetSize())
+		{
+			right = blocks[i].GetCoordinates().xCoord + blocks[i].GetSize();
+		}
+	}
+	return right;
 }
 
 int16_t Tetrimino::GetBottomEdge()
 {
-	return Block().GetCoordinates().yCoord + Block().GetSize();
+	int bottom = this->centerPoint.yCoord;
+	for (size_t i = 0; i < blocks.size(); i++)
+	{
+		if (bottom < blocks[i].GetCoordinates().yCoord + blocks[i].GetSize())
+		{
+			bottom = blocks[i].GetCoordinates().yCoord + blocks[i].GetSize();
+		}
+	}
+	return bottom;
 }
