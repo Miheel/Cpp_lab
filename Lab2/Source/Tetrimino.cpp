@@ -80,31 +80,42 @@ void Tetrimino::Rotate(float radians)
 void Tetrimino::Move(Direction dir)
 {
 	switch (dir)
-	{//center fix
+	{
 	case Direction::DOWN:
 		for (size_t i = 0; i < blocks.size(); i++)
 		{
 			blocks[i].Move(0, blocks[i].GetSize());
+
 		}
+		
+		this->centerPoint.yCoord += BLOCKSIZE;
 		break;
+	
 	case Direction::LEFT:
 		for (size_t i = 0; i < blocks.size(); i++)
 		{
 			blocks[i].Move(-blocks[i].GetSize(), 0);
 		}
+		
+		this->centerPoint.xCoord -= BLOCKSIZE;
 		break;
+	
 	case Direction::RIGHT:
 		for (size_t i = 0; i < blocks.size(); i++)
 		{
 			blocks[i].Move(blocks[i].GetSize(), 0);
 		}
+		
+		this->centerPoint.xCoord += BLOCKSIZE;
 		break;
+	
 	case Direction::UP:
 		for (size_t i = 0; i < blocks.size(); i++)
 		{
 			blocks[i].Move(0, -blocks[i].GetSize());
 		}
 		break;
+	
 	default:
 		break;
 	}
