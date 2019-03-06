@@ -1,5 +1,9 @@
+#ifndef UNIQUEPTR_HPP
+#define UNIQUEPTR_HPP
+
 #include "Attack.hpp"
 
+#include "MemoryLeakChecker.hpp"
 class UniqPtr
 {
 public:
@@ -17,7 +21,7 @@ public:
 	
 	Attack& operator*();
 	Attack* Get()const;
-	bool check() const;
+	bool Check() const;
 	void reset(Attack* attptr = nullptr);
 
 	~UniqPtr();
@@ -25,3 +29,4 @@ public:
 private:
 	Attack* internalAttptr;
 };
+#endif

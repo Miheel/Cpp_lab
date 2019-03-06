@@ -1,10 +1,13 @@
 #ifndef FIGHTER_HPP
 #define FIGHTER_HPP
 
+#include <string>
+#include <fstream>
 #include "Attack.hpp"
 #include "Sprite.hpp"
 #include "UniquePointer.hpp"
-#include <string>
+
+#include "MemoryLeakChecker.hpp"
 
 struct FighterData
 {
@@ -38,7 +41,7 @@ private:
 	Sprite sprite;
 	int NrOfArr;
 	FighterData Fdata;
-	UniqPtr *AList;
+	UniqPtr AList;
 
 	void copy(const Fighter& other);
 	void freeMem()const;

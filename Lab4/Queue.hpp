@@ -2,7 +2,11 @@
 #define QUEUE_H
 #include <string>
 #include "DataContainer.hpp"
-#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+
+#undef new
+
+#include "MemoryLeakChecker.hpp"
+
 template <typename T>
 class Queue : public Datacontainer<T>
 {
@@ -52,7 +56,7 @@ inline void Queue<T>::Push(T data)
 template<typename T>
 inline const T & Queue<T>::Peek()
 {
-	return this->element[this->Size()-1];
+	return this->element[0];
 }
 
 template<typename T>

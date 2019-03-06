@@ -1,7 +1,11 @@
+#undef new
+
 #include "UniquePointer.hpp"
+#include "MemoryLeakChecker.hpp"
 
 UniqPtr::UniqPtr()
 {
+	this->internalAttptr = nullptr;
 }
 
 UniqPtr::UniqPtr(Attack * attptr)
@@ -9,17 +13,18 @@ UniqPtr::UniqPtr(Attack * attptr)
 	this->internalAttptr = attptr;
 }
 
-UniqPtr::UniqPtr(UniqPtr && other)
+UniqPtr::UniqPtr(UniqPtr && other):internalAttptr(other.internalAttptr)
 {
-	this->internalAttptr = other.internalAttptr;
+	other.internalAttptr = nullptr;   
 }
 
 UniqPtr & UniqPtr::operator=(UniqPtr && other)
 {
 	if (this != &other)
 	{
-		delete this->internalAttptr;
+		delete[] this->internalAttptr;
 		this->internalAttptr = other.internalAttptr;
+		other.internalAttptr = nullptr;
 	}
 	return *this;
 }
@@ -34,28 +39,18 @@ Attack * UniqPtr::Get() const
 	return this->internalAttptr;
 }
 
-bool UniqPtr::check() const
+bool UniqPtr::Check() const
 {
-	bool check = true;
-	if (this->internalAttptr != nullptr)
-	{
-		check = true;
-	}
-	else
-	{
-		check = false;
-	}
-
-	return check;
+	return this->internalAttptr != nullptr;
 }
 
 void UniqPtr::reset(Attack * attptr)
 {
-	delete this->internalAttptr;
+	delete[] this->internalAttptr;
 	this->internalAttptr = attptr;
 }
 
 UniqPtr::~UniqPtr()
 {
-	delete internalAttptr;
+	delete[] this->internalAttptr;
 }
