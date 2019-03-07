@@ -22,7 +22,7 @@ UniqPtr & UniqPtr::operator=(UniqPtr && other)
 {
 	if (this != &other)
 	{
-		delete[] this->internalAttptr;
+		delete this->internalAttptr;
 		this->internalAttptr = other.internalAttptr;
 		other.internalAttptr = nullptr;
 	}
@@ -46,11 +46,11 @@ bool UniqPtr::Check() const
 
 void UniqPtr::reset(Attack * attptr)
 {
-	delete[] this->internalAttptr;
+	delete this->internalAttptr;
 	this->internalAttptr = attptr;
 }
 
 UniqPtr::~UniqPtr()
 {
-	delete[] this->internalAttptr;
+	delete this->internalAttptr;
 }

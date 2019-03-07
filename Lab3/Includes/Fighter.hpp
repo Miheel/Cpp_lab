@@ -39,12 +39,13 @@ public:
 
 private:
 	Sprite sprite;
-	int NrOfArr;
+	int NrOfATK;
 	FighterData Fdata;
-	UniqPtr AList;
+	UniqPtr *AList;
 
 	void copy(const Fighter& other);
-	void freeMem()const;
+	void expand();
+	void freemem()const;
 
 };
 #endif
