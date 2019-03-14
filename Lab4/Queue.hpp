@@ -1,6 +1,5 @@
 #ifndef QUEUE_H
 #define QUEUE_H
-#include <string>
 #include "DataContainer.hpp"
 
 #undef new
@@ -16,25 +15,20 @@ public:
 	void Push(T data);
 	const T& Peek();
 	void Pop();
-	unsigned int Size();
 	void Print();
 private:
 	T* element;
-	int capacity;
-	int NrOfelem;
+	int start;
 	void freeMem() const;
 	void expand();
-	void copy(const T& other);
-
 };
 #endif // QUEUE_H
 
 template<typename T>
-inline Queue<T>::Queue()
+inline Queue<T>::Queue():Datacontainer()
 {
-	this->capacity = 1;
-	this->NrOfelem = 0;
-	this->element = new T[this->capacity];
+	int start = 0;
+	this->element = new T[capacity];
 }
 
 template<typename T>
@@ -46,29 +40,24 @@ inline Queue<T>::~Queue()
 template<typename T>
 inline void Queue<T>::Push(T data)
 {
-	if (this->Size() == this->capacity)
+	if (Size() == capacity)
 	{
 		this->expand();
 	}
-	this->element[this->NrOfelem++] = data;
+	this->element[NrOfElem++] = data;
 }
 
 template<typename T>
 inline const T & Queue<T>::Peek()
 {
-	return this->element[0];
+	return this->element[this->start];
 }
 
 template<typename T>
 inline void Queue<T>::Pop()
 {
-	--this->NrOfelem;
-}
-
-template<typename T>
-inline unsigned int Queue<T>::Size()
-{
-	return this->NrOfelem;
+	this->element[this->start++];
+	NrOfElem--;
 }
 
 template<typename T>
@@ -80,14 +69,14 @@ inline void Queue<T>::freeMem() const
 template<typename T>
 inline void Queue<T>::expand()
 {
-	this->capacity *= 2;
-	T* temp = new T[this->capacity];
+	capacity *= 2;
+	T* temp = new T[capacity];
 
-	for (unsigned int i = 0; i < this->Size(); i++)
+	for (unsigned int i = 0; i < Size(); i++)
 	{
-		temp[i] = this->element[i];
+		temp[i] = element[this->start++];
 	}
-
+	this->start = 0;
 	this->freeMem();
 	this->element = temp;
 }
@@ -95,10 +84,11 @@ inline void Queue<T>::expand()
 template<typename T>
 inline void Queue<T>::Print()
 {
-	for (unsigned int i = 0; i < this->Size(); i++)
+	int temp = this->start;
+	for (unsigned int i = 0; i < Size(); i++)
 	{
-		std::cout << this->element[i] << ", ";
+		std::cout << element[temp++] << ", ";
 	}
-	//std::cout << this->capacity;
+	std::cout <<"cap"<< this->capacity;
 	std::cout << "\n";
 }
