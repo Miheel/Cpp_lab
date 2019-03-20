@@ -11,3 +11,7 @@ Lab1: Text based game about finding treasures (indicated by "0") on a 2d map.
 </pre>
 
 Lab2: Tetrimino class
+
+Lab3: Unique_pointer
+
+Lab4: Template of queue and stack 
