@@ -38,7 +38,7 @@ int main()
 		std::queue<std::string> Q4;
 
 		std::ifstream in;
-		in.open("Lab4_TestFile", std::ifstream::in);
+		in.open("Resources/Lab4_TestFile", std::ifstream::in);
 		std::string str;
 		std::string temp;
 		std::getline(in, str, '\0');
