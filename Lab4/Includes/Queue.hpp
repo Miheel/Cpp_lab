@@ -15,7 +15,6 @@ public:
 	void Push(T data);
 	const T& Peek();
 	void Pop();
-	void Print();
 };
 #endif // QUEUE_H
 
@@ -50,17 +49,6 @@ inline void Queue<T>::Pop()
 	{
 		this->element[i] = this->element[i + 1];
 	}
-	this->element[0];
+	
 	this->NrOfElem--;
-}
-
-template<typename T>
-inline void Queue<T>::Print()
-{
-	for (unsigned int i = 0; i < this->NrOfElem; i++)
-	{
-		std::cout << this->element[i] << ", ";
-	}
-	std::cout <<"cap"<< this->capacity;
-	std::cout << "\n";
 }
