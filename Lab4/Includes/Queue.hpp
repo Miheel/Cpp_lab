@@ -49,6 +49,5 @@ inline void Queue<T>::Pop()
 	{
 		this->element[i] = this->element[i + 1];
 	}
-	
 	this->NrOfElem--;
 }

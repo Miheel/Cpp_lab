@@ -15,7 +15,6 @@ public:
 	void Push(T data);
 	const T& Peek();
 	void Pop();
-	void Print();
 };
 #endif // STACK_H
 
@@ -47,15 +46,4 @@ inline void Stack<T>::Pop()
 		throw this->empty;
 	}
 	this->NrOfElem--;
-}
-
-template<typename T>
-inline void Stack<T>::Print()
-{
-	for (int i = 0; i < this->NrOfElem; i++)
-	{
-		std::cout << this->element[i] << ", ";
-	}
-	std::cout << "cap" << this->capacity;
-	std::cout << "\n";
 }
