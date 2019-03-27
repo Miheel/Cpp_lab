@@ -21,7 +21,7 @@ protected:
 	  }
 	}empty;
 
-	void freeMem() const { delete[] this->element; }
+	void freeMem() { delete[] this->element; }
 	void expand() {
 		capacity *= 2;
 		T* temp = new T[capacity];

@@ -46,7 +46,7 @@ inline void Stack<T>::Pop()
 	{
 		throw this->empty;
 	}
-	this->element[this->NrOfElem--];
+	this->NrOfElem--;
 }
 
 template<typename T>

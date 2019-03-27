@@ -37,6 +37,9 @@ int main()
 		Queue<std::string> Q3;
 		std::queue<std::string> Q4;
 
+		Stack<std::string> S3;
+		std::stack<std::string> S4;
+
 		std::ifstream in;
 		in.open("Resources/Lab4_TestFile", std::ifstream::in);
 		std::string str;
@@ -44,6 +47,8 @@ int main()
 		std::getline(in, str, '\0');
 		std::stringstream str_s1(str);
 		std::stringstream str_s2(str);
+		std::stringstream str_s3(str);
+		std::stringstream str_s4(str);
 #pragma endregion
 
 #pragma region try1
@@ -217,6 +222,26 @@ int main()
 		SteadyClockTimePoint end10 = steady_clock::now();
 		std::cout << duration_cast<microseconds>(end9 - start9).count() << ": microsec my queue on string" << std::endl;
 		std::cout << duration_cast<microseconds>(end10 - start10).count() << ": microsec std queue on string" << std::endl;
+#pragma endregion
+
+#pragma region stack_string
+		SteadyClockTimePoint start11 = steady_clock::now();
+		while (str_s3 >> temp)
+		{
+			S3.Push(temp);
+		}
+
+		SteadyClockTimePoint end11 = steady_clock::now();
+
+		SteadyClockTimePoint start12 = steady_clock::now();
+		while (str_s4 >> temp)
+		{
+			S4.push(temp);
+		}
+
+		SteadyClockTimePoint end12 = steady_clock::now();
+		std::cout << duration_cast<microseconds>(end11 - start11).count() << ": microsec my stack on string" << std::endl;
+		std::cout << duration_cast<microseconds>(end12 - start12).count() << ": microsec std stack on string\n" << std::endl;
 #pragma endregion
 
 #pragma region try2
