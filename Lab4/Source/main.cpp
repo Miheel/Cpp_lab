@@ -1,12 +1,12 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <chrono>
+#include <exception>
+#include <vector>
 #include <queue>
 #include <stack>
-#include <fstream>
-#include <exception>
-#include "DataContainer.hpp"
 #include "Queue.hpp"
 #include "Stack.hpp"
 
@@ -25,23 +25,42 @@ int main()
 
 #pragma region init
 		srand((unsigned)time(0));
-		const int CAP = 1000;
-		int a = rand() % 100 + 1;
+		const int CAP = 10000;
+		std::vector<int> rngInt;
+		for (size_t i = 0; i < CAP; i++)
+		{
+			rngInt.push_back(rand() % 100 + 1);
+		}
 
-		Queue<int> Q1;
-		std::queue<int> Q2;
+		std::vector<SteadyClockTimePoint> startClock;
+		std::vector<SteadyClockTimePoint> stopClock;
 
-		Stack<int> S1;
-		std::stack<int> S2;
+		std::vector<SteadyClockTimePoint> startClockTot;
+		std::vector<SteadyClockTimePoint> stopClockTot;
 
-		Queue<std::string> Q3;
-		std::queue<std::string> Q4;
+		std::vector<long long> time;
+		std::vector<long long> timeTotal;
 
-		Stack<std::string> S3;
-		std::stack<std::string> S4;
+		Queue<int> Queue_int;
+		std::queue<int> std_Queue_int;
+
+		Stack<int> Stack_int;
+		std::stack<int> std_Stack_int;
+
+		Queue<std::string> Queue_string;
+		std::queue<std::string> std_Queue_string;
+
+		Stack<std::string> Stack_string;
+		std::stack<std::string> std_Stack_string;
+
+		int mySum;
+		int stdSum;
+		std::string myStrSum;
+		std::string stdStrSum;
 
 		std::ifstream in;
 		in.open("Resources/Lab4_TestFile", std::ifstream::in);
+
 		std::string str;
 		std::string temp;
 		std::getline(in, str, '\0');
@@ -54,7 +73,7 @@ int main()
 #pragma region try1
 		try
 		{
-			Q1.Pop();
+			Queue_int.Pop();
 		}
 		catch (const std::exception &e)
 		{
@@ -62,7 +81,7 @@ int main()
 		}
 		try
 		{
-			Q1.Peek();
+			Queue_int.Peek();
 		}
 		catch (const std::exception &e)
 		{
@@ -71,7 +90,7 @@ int main()
 
 		try
 		{
-			S1.Pop();
+			Stack_int.Pop();
 		}
 		catch (const std::exception &e)
 		{
@@ -79,7 +98,7 @@ int main()
 		}
 		try
 		{
-			S1.Peek();
+			Stack_int.Peek();
 		}
 		catch (const std::exception &e)
 		{
@@ -88,166 +107,273 @@ int main()
 #pragma endregion
 
 #pragma region queue_int
-		SteadyClockTimePoint starttot1 = steady_clock::now();
+		startClockTot.push_back(steady_clock::now());//0t
 
-		SteadyClockTimePoint start1 = steady_clock::now();
+		//load my queue with int
+		startClock.push_back(steady_clock::now());//1
 		for (int i = 0; i < CAP; i++)
 		{
-			Q1.Push(a);
+			Queue_int.Push(rngInt[i]);
 		}
-		SteadyClockTimePoint end1 = steady_clock::now();
+		stopClock.push_back(steady_clock::now());//1
 
-		SteadyClockTimePoint start3 = steady_clock::now();
-		int mySum = 0;
-		for (int i = 0; i < CAP; i++)
-		{
-			try
-			{
-				mySum += Q1.Peek();
-			}
-			catch (const std::exception &e)
-			{
-				std::cerr << "exeption: " << e.what() << "\n";
-			}
-			try
-			{
-				Q1.Pop();
-			}
-			catch (const std::exception &e)
-			{
-				std::cerr << "exeption: " << e.what() << "\n";
-			}
-		}
-		SteadyClockTimePoint end3 = steady_clock::now();
-
-		SteadyClockTimePoint endtot1 = steady_clock::now();
-
-		SteadyClockTimePoint starttot2 = steady_clock::now();
-
-		SteadyClockTimePoint start2 = steady_clock::now();
-		for (int i = 0; i < CAP; i++)
-		{
-			Q2.push(a);
-		}
-		SteadyClockTimePoint end2 = steady_clock::now();
-
-		SteadyClockTimePoint start4 = steady_clock::now();
-		int stdSum = 0;
-		for (int i = 0; i < CAP; i++)
-		{
-			stdSum += Q2.front();
-			Q2.pop();
-		}
-		SteadyClockTimePoint end4 = steady_clock::now();
-
-		SteadyClockTimePoint endtot2 = steady_clock::now();
-
-		std::cout << "\nsum of my Queue" << mySum << "\n";
-		std::cout << "sum of std Queue" << stdSum << "\n\n";
-
-		std::cout << duration_cast<microseconds>(end1 - start1).count() << ": microsec my queue on int" << std::endl;
-		std::cout << duration_cast<microseconds>(end2 - start2).count() << ": microsec std queue on int" << std::endl;
-		std::cout << duration_cast<microseconds>(end3 - start3).count() << ": microsec my queue to sum" << std::endl;
-		std::cout << duration_cast<microseconds>(end4 - start4).count() << ": microsec std queue to sum" << std::endl;
-		std::cout << duration_cast<microseconds>(endtot1 - starttot1).count() << ": microsec total time my" << std::endl;
-		std::cout << duration_cast<microseconds>(endtot2 - starttot2).count() << ": microsec total time std" << std::endl
-				  << std::endl;
-#pragma endregion
-
-#pragma region stack_int
-		SteadyClockTimePoint starttot3 = steady_clock::now();
-		SteadyClockTimePoint start5 = steady_clock::now();
-		for (int i = 0; i < CAP; i++)
-		{
-			S1.Push(a);
-		}
-		SteadyClockTimePoint end5 = steady_clock::now();
-
-		SteadyClockTimePoint start7 = steady_clock::now();
+		//sum my queue
+		startClock.push_back(steady_clock::now());//2
 		mySum = 0;
 		for (int i = 0; i < CAP; i++)
 		{
-			mySum += S1.Peek();
-			S1.Pop();
+			try
+			{
+				mySum += Queue_int.Peek();
+			}
+			catch (const std::exception &e)
+			{
+				std::cerr << "exeption: " << e.what() << "\n";
+				i = CAP;
+			}
+			try
+			{
+				Queue_int.Pop();
+			}
+			catch (const std::exception &e)
+			{
+				std::cerr << "exeption: " << e.what() << "\n";
+			}
 		}
-		SteadyClockTimePoint end7 = steady_clock::now();
-		SteadyClockTimePoint endtot3 = steady_clock::now();
+		stopClock.push_back(steady_clock::now());//2
 
-		SteadyClockTimePoint starttot4 = steady_clock::now();
-		SteadyClockTimePoint start6 = steady_clock::now();
+		stopClockTot.push_back(steady_clock::now());//0t
+
+
+
+		startClockTot.push_back(steady_clock::now());//1t
+
+		//load std queue with int
+		startClock.push_back(steady_clock::now());//3
 		for (int i = 0; i < CAP; i++)
 		{
-			S2.push(a);
+			std_Queue_int.push(rngInt[i]);
 		}
-		SteadyClockTimePoint end6 = steady_clock::now();
+		stopClock.push_back(steady_clock::now());//3
 
-		SteadyClockTimePoint start8 = steady_clock::now();
+		//sum std queue
+		startClock.push_back(steady_clock::now());//4
 		stdSum = 0;
 		for (int i = 0; i < CAP; i++)
 		{
-			stdSum += S2.top();
-			S2.pop();
+			stdSum += std_Queue_int.front();
+			std_Queue_int.pop();
 		}
-		SteadyClockTimePoint end8 = steady_clock::now();
+		stopClock.push_back(steady_clock::now());//4
 
-		SteadyClockTimePoint endtot4 = steady_clock::now();
+		stopClockTot.push_back(steady_clock::now());//1t
+#pragma endregion
 
-		std::cout << "\nsum of my stack" << mySum << "\n";
-		std::cout << "sum of std stack" << stdSum << "\n\n";
+#pragma region stack_int
+		startClockTot.push_back(steady_clock::now());//2t;
 
-		std::cout << duration_cast<microseconds>(end5 - start5).count() << ": microsec my stack on int" << std::endl;
-		std::cout << duration_cast<microseconds>(end6 - start6).count() << ": microsec std stack on int" << std::endl;
-		std::cout << duration_cast<microseconds>(end7 - start7).count() << ": microsec my stack to sum" << std::endl;
-		std::cout << duration_cast<microseconds>(end8 - start8).count() << ": microsec std stack to sum" << std::endl;
-		std::cout << duration_cast<microseconds>(endtot3 - starttot3).count() << ": microsec total time my" << std::endl;
-		std::cout << duration_cast<microseconds>(endtot4 - starttot4).count() << ": microsec total time std" << std::endl
-				  << std::endl;
+		//load my stack with int
+		startClock.push_back(steady_clock::now());//5
+		for (int i = 0; i < CAP; i++)
+		{
+			Stack_int.Push(rngInt[i]);
+		}
+		stopClock.push_back(steady_clock::now());//5
+
+		//sum my stack
+		startClock.push_back(steady_clock::now());//6
+		mySum = 0;
+		for (int i = 0; i < CAP; i++)
+		{
+			mySum += Stack_int.Peek();
+			Stack_int.Pop();
+		}
+		stopClock.push_back(steady_clock::now());//6
+
+		stopClockTot.push_back(steady_clock::now());//2t
+
+
+
+		startClockTot.push_back(steady_clock::now());//3t
+
+		//load std stack with int
+		startClock.push_back(steady_clock::now());//7
+		for (int i = 0; i < CAP; i++)
+		{
+			std_Stack_int.push(rngInt[i]);
+		}
+		stopClock.push_back(steady_clock::now());//7
+
+		//sum std stack
+		startClock.push_back(steady_clock::now());//8
+		stdSum = 0;
+		for (int i = 0; i < CAP; i++)
+		{
+			stdSum += std_Stack_int.top();
+			std_Stack_int.pop();
+		}
+		stopClock.push_back(steady_clock::now());//8
+
+		stopClockTot.push_back(steady_clock::now());//3t
+
 #pragma endregion
 
 #pragma region queue string
-		SteadyClockTimePoint start9 = steady_clock::now();
+		startClockTot.push_back(steady_clock::now());//4t;
+
+		//load my queue with str
+		startClock.push_back(steady_clock::now());//9
 		while (str_s1 >> temp)
 		{
-			Q3.Push(temp);
+			Queue_string.Push(temp);
 		}
+		stopClock.push_back(steady_clock::now());//9
 
-		SteadyClockTimePoint end9 = steady_clock::now();
+		//sum my queue
+		startClock.push_back(steady_clock::now());//10
+		myStrSum = "";
+		for (int i = 0; i < CAP && Queue_string.Size() > 0; i++)
+		{
+				myStrSum += Queue_string.Peek();
+				Queue_string.Pop();
 
-		SteadyClockTimePoint start10 = steady_clock::now();
+		}
+		stopClock.push_back(steady_clock::now());//10
+
+		stopClockTot.push_back(steady_clock::now());//4t
+
+
+
+		startClockTot.push_back(steady_clock::now());//5t;
+
+		//load std queue with str
+		startClock.push_back(steady_clock::now());//11
 		while (str_s2 >> temp)
 		{
-			Q4.push(temp);
+			std_Queue_string.push(temp);
 		}
+		stopClock.push_back(steady_clock::now());//11
 
-		SteadyClockTimePoint end10 = steady_clock::now();
-		std::cout << duration_cast<microseconds>(end9 - start9).count() << ": microsec my queue on string" << std::endl;
-		std::cout << duration_cast<microseconds>(end10 - start10).count() << ": microsec std queue on string" << std::endl;
+		//sum std queue
+		startClock.push_back(steady_clock::now());//12
+		stdStrSum = "";
+		for (int i = 0; i < CAP && std_Queue_string.size() > 0; i++)
+		{
+				stdStrSum += std_Queue_string.front();
+				std_Queue_string.pop();
+		}
+		stopClock.push_back(steady_clock::now());//12
+
+		stopClockTot.push_back(steady_clock::now());//5t
+
 #pragma endregion
 
 #pragma region stack_string
-		SteadyClockTimePoint start11 = steady_clock::now();
+		startClockTot.push_back(steady_clock::now());//5t;
+
+		startClock.push_back(steady_clock::now());//13
 		while (str_s3 >> temp)
 		{
-			S3.Push(temp);
+			Stack_string.Push(temp);
 		}
+		stopClock.push_back(steady_clock::now());//13
 
-		SteadyClockTimePoint end11 = steady_clock::now();
+		//sum my stack
+		startClock.push_back(steady_clock::now());//14
+		myStrSum = "";
+		for (int i = 0; i < CAP && Stack_string.Size() > 0; i++)
+		{
+			myStrSum += Stack_string.Peek();
+			Stack_string.Pop();
 
-		SteadyClockTimePoint start12 = steady_clock::now();
+		}
+		stopClock.push_back(steady_clock::now());//14
+
+		stopClockTot.push_back(steady_clock::now());//6t
+
+
+
+		startClockTot.push_back(steady_clock::now());//7t;
+
+		startClock.push_back(steady_clock::now());//15
 		while (str_s4 >> temp)
 		{
-			S4.push(temp);
+			std_Stack_string.push(temp);
 		}
+		stopClock.push_back(steady_clock::now());//15
 
-		SteadyClockTimePoint end12 = steady_clock::now();
-		std::cout << duration_cast<microseconds>(end11 - start11).count() << ": microsec my stack on string" << std::endl;
-		std::cout << duration_cast<microseconds>(end12 - start12).count() << ": microsec std stack on string\n" << std::endl;
+		//sum std stack
+		startClock.push_back(steady_clock::now());//16
+		stdStrSum = "";
+		for (int i = 0; i < CAP && std_Stack_string.size() > 0; i++)
+		{
+			stdStrSum += std_Stack_string.top();
+			std_Stack_string.pop();
+		}
+		stopClock.push_back(steady_clock::now());//16
+
+		stopClockTot.push_back(steady_clock::now());//7t
+#pragma endregion
+
+#pragma region utskrift
+		for (size_t i = 0; i < startClock.size(); i++)
+		{
+			time.push_back(duration_cast<microseconds>(stopClock[i] - startClock[i]).count());
+		}
+		for (size_t i = 0; i < startClockTot.size(); i++)
+		{
+			timeTotal.push_back(duration_cast<microseconds>(stopClockTot[i] - startClockTot[i]).count());
+		}
+		//---------------Queue int---------------
+		std::cout << "\nsum of my Queue: " << mySum << "\n";
+		std::cout << time[0] << ": microsec my queue on int" << std::endl;
+		std::cout << time[1] << ": microsec my queue to sum" << std::endl;
+		std::cout << timeTotal[0] << ": microsec total time my queue" << std::endl << std::endl;
+
+		std::cout << "sum of std Queue: " << stdSum << "\n";
+		std::cout << time[2] << ": microsec std queue on int" << std::endl;
+		std::cout << time[3] << ": microsec std queue to sum" << std::endl;
+		std::cout << timeTotal[1] << ": microsec total time std queue" << std::endl << std::endl;
+
+		//---------------Stack int---------------
+		std::cout << "\nsum of my stack: " << mySum << "\n";
+		std::cout << time[4] << ": microsec my stack on int" << std::endl;
+		std::cout << time[5] << ": microsec my stack to sum" << std::endl;
+		std::cout << timeTotal[2] << ": microsec total time my stack" << std::endl << std::endl;
+
+		std::cout << "sum of std stack: " << stdSum << "\n";
+		std::cout << time[6] << ": microsec std stack on int" << std::endl;
+		std::cout << time[7] << ": microsec std stack to sum" << std::endl;
+		std::cout << timeTotal[3] << ": microsec total time std stack" << std::endl << std::endl;
+
+		//---------------Queue string---------------
+		std::cout << "\nsum of my queue: " << "\n";
+		std::cout << time[8] << ": microsec my queue on str" << std::endl;
+		std::cout << time[9] << ": microsec my queue to sum" << std::endl;
+		std::cout << timeTotal[4] << ": microsec total time my queue" << std::endl << std::endl;
+
+		std::cout << "sum of std queue: " << "\n";
+		std::cout << time[10] << ": microsec std queue on str" << std::endl;
+		std::cout << time[11] << ": microsec std queue to sum" << std::endl;
+		std::cout << timeTotal[5] << ": microsec total time std queue" << std::endl << std::endl;
+
+		//---------------Stack string---------------
+		std::cout << "\nsum of my stack: " << "\n";
+		std::cout << time[12] << ": microsec my stack on str" << std::endl;
+		std::cout << time[13] << ": microsec my stack to sum" << std::endl;
+		std::cout << timeTotal[6] << ": microsec total time my stack" << std::endl << std::endl;
+
+		std::cout << "sum of std stack: " <<"\n";
+		std::cout << time[14] << ": microsec std stack on str" << std::endl;
+		std::cout << time[15] << ": microsec std stack to sum" << std::endl;
+		std::cout << timeTotal[7] << ": microsec total time std stack" << std::endl << std::endl;
+
 #pragma endregion
 
 #pragma region try2
 		try
 		{
-			Q1.Pop();
+			Queue_int.Pop();
 		}
 		catch (const std::exception &e)
 		{
@@ -255,7 +381,7 @@ int main()
 		}
 		try
 		{
-			Q1.Peek();
+			Queue_int.Peek();
 		}
 		catch (const std::exception &e)
 		{
@@ -264,7 +390,7 @@ int main()
 
 		try
 		{
-			S1.Pop();
+			Stack_int.Pop();
 		}
 		catch (const std::exception &e)
 		{
@@ -272,14 +398,14 @@ int main()
 		}
 		try
 		{
-			S1.Peek();
+			Stack_int.Peek();
 		}
 		catch (const std::exception &e)
 		{
 			std::cerr << "exeption: " << e.what() << "\n";
 		}
 #pragma endregion
-	
+
 	}
 	MemoryLeakChecker::DumpInformation();
 	getchar();

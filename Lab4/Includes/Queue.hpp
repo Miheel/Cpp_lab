@@ -1,22 +1,32 @@
 #ifndef QUEUE_H
 #define QUEUE_H
-#include "DataContainer.hpp"
 
 #undef new
 
+#include "DataContainer.hpp"
 #include "MemoryLeakChecker.hpp"
 
 template <typename T>
 class Queue : public DataContainer<T>
 {
 public:
-	Queue() {}
-	~Queue() {}
+	Queue();
+	~Queue();
 	void Push(T data);
-	const T& Peek();
+	const T& Peek() const;
 	void Pop();
 };
 #endif // QUEUE_H
+
+template<typename T>
+inline Queue<T>::Queue()
+{
+}
+
+template<typename T>
+inline Queue<T>::~Queue()
+{
+}
 
 template<typename T>
 inline void Queue<T>::Push(T data)
@@ -29,9 +39,9 @@ inline void Queue<T>::Push(T data)
 }
 
 template<typename T>
-inline const T & Queue<T>::Peek()
+inline const T & Queue<T>::Peek() const
 {
-	if (this->NrOfElem == 0)
+	if (this->Size() == 0)
 	{
 		throw this->empty;
 	}
@@ -41,11 +51,11 @@ inline const T & Queue<T>::Peek()
 template<typename T>
 inline void Queue<T>::Pop()
 {
-	if (this->NrOfElem == 0)
+	if (this->Size() == 0)
 	{
 		throw this->empty;
 	}
-	for (int i = 0; i < this->NrOfElem-1; i++)
+	for (unsigned int i = 0; i < this->Size() - 1; i++)
 	{
 		this->element[i] = this->element[i + 1];
 	}

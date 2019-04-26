@@ -1,27 +1,37 @@
 #ifndef STACK_H
 #define STACK_H
-#include "DataContainer.hpp"
 
 #undef new
 
+#include "DataContainer.hpp"
 #include "MemoryLeakChecker.hpp"
 
 template <typename T>
 class Stack : public DataContainer<T>
 {
 public:
-	Stack() {}
-	~Stack() {}
+	Stack();
+	~Stack();
 	void Push(T data);
-	const T& Peek();
+	const T& Peek() const;
 	void Pop();
 };
 #endif // STACK_H
 
 template<typename T>
+inline Stack<T>::Stack()
+{
+}
+
+template<typename T>
+inline Stack<T>::~Stack()
+{
+}
+
+template<typename T>
 inline void Stack<T>::Push(T data)
 {
-	if (this->NrOfElem == this->capacity)
+	if (this->Size() == this->capacity)
 	{
 		this->expand();
 	}
@@ -29,19 +39,19 @@ inline void Stack<T>::Push(T data)
 }
 
 template<typename T>
-inline const T & Stack<T>::Peek()
+inline const T & Stack<T>::Peek() const
 {
-	if (this->NrOfElem == 0)
+	if (this->Size() == 0)
 	{
 		throw this->empty;
 	}
-	return this->element[this->NrOfElem-1];
+	return this->element[this->NrOfElem - 1];
 }
 
 template<typename T>
 inline void Stack<T>::Pop()
 {
-	if (this->NrOfElem == 0)
+	if (this->Size() == 0)
 	{
 		throw this->empty;
 	}
