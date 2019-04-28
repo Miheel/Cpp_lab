@@ -1,9 +1,9 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+#include "DataContainer.hpp"
 #undef new
 
-#include "DataContainer.hpp"
 #include "MemoryLeakChecker.hpp"
 
 template <typename T>

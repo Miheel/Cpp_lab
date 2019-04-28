@@ -3,7 +3,6 @@
 
 #undef new
 
-#include "DataContainer.hpp"
 #include "MemoryLeakChecker.hpp"
 
 template <typename T>

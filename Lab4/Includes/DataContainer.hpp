@@ -29,6 +29,7 @@ public:
 	virtual void Pop() = 0;
 	unsigned int Size() const;
 };
+#endif // DATACONTAINER_H
 
 template<typename T>
 inline void DataContainer<T>::freeMem()
@@ -74,4 +75,4 @@ inline const char * DataContainer<T>::exEmpty::what() const throw()
 {
 	return "Empty arr";
 }
-#endif // DATACONTAINER_H
+
